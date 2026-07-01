@@ -11,35 +11,34 @@ class Solution {
  public:
   vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc,
                                 int color) {
+    int original = image[sr][sc];
+    if (original == color) return image;
+
     vector<vector<int>> result(image);
     vector<vector<bool>> visited(image.size(),
-                                 vector<bool>(image[0].size(), false));
+                                 vector<bool>(image[0].size()));
     queue<pair<int, int>> q;
 
     int dX[4] = {0, 1, 0, -1};
     int dY[4] = {1, 0, -1, 0};
 
     q.push({sr, sc});
-
-    int changingColor = image[sr][sc];
+    visited[sr][sc] = true;
 
     while (!q.empty()) {
       auto p = q.front();
       q.pop();
 
       int x = p.first, y = p.second;
-      visited[x][y] = true;
-
-      if (result[x][y] == changingColor) {
-        result[x][y] = color;
-      }
+      result[x][y] = color;
 
       for (int k = 0; k < 4; ++k) {
         int nX = x + dX[k];
         int nY = y + dY[k];
 
         if (nX >= 0 && nX < image.size() && nY >= 0 && nY < image[0].size()) {
-          if (visited[nX][nY] == false && result[nX][nY] == changingColor) {
+          if (!visited[nX][nY] && result[nX][nY] == original) {
+            visited[nX][nY] = true;
             q.push({nX, nY});
           }
         }
